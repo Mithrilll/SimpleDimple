@@ -30,9 +30,12 @@ public class Switcher : MonoBehaviour
 
         if(isRotation && angle < 180.0f)
         {
-            float step = 2.0f;
+            float step = 180.0f/(0.25f/Time.deltaTime);
 
-            main.transform.Rotate(step, 0, 0);
+            if(angle + step > 180.0f)
+                main.transform.Rotate(180.0f-angle, 0, 0);
+            else
+                main.transform.Rotate(step, 0, 0);
 
             angle += step;
         }

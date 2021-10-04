@@ -14,9 +14,9 @@ public class MainMenuScript : MonoBehaviour
 
     }
 
-    public void NewGame(){
+    public void NewGame(int index){
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(index);
     
     }
 
