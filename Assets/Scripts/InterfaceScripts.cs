@@ -5,25 +5,48 @@ using UnityEngine.UI;
 
 public class InterfaceScripts : MonoBehaviour
 {
-    public GameObject[] shopPanels;
+    public GameObject[] mShopPanels;
+    public int[] mTypesOfClickBonuses;
+    public int[] mPricesOfClickBonuses;
+    public Text[] mTextForPricesOfClickBonunses;
+    public int[] mTypesOfAutoClickes;
+    public int[] mPricesOfAutoClickes;
+    public Text[] mTextForPricesOfAutoClickes;
+    public ScoreCounter mScoreCounter;
+    public SaveSystem mSaveSystem;
 
-    public int[] ClickBonus;
-    public int[] ClickBonusCost;
-    public Text[] TextClickBonusCost;
-    public int autoBonus = 0;
-    float time1 = 0;
+    private void Awake()
+    {
+        for(int i =0; i < mSaveSystem.LoadData().typesofclickbonuses.Length; i++)
+        {
+            mTypesOfClickBonuses[i] = mSaveSystem.LoadData().typesofclickbonuses[i];
+            mPricesOfClickBonuses[i] = mSaveSystem.LoadData().pricesclickbonuses[i];
+        }
 
-    public ScoreCounter Score;
+        for (int i = 0; i < mSaveSystem.LoadData().typesofautoclickes.Length; i++)
+        {
+            mTypesOfAutoClickes[i] = mSaveSystem.LoadData().typesofautoclickes[i];
+            mPricesOfAutoClickes[i] = mSaveSystem.LoadData().pricesautoclickes[i];
+        }
+    }
 
+    private void Start()
+    {
+        for(int i =0; i < mTypesOfClickBonuses.Length; i++)
+            mTextForPricesOfClickBonunses[i].text = mPricesOfClickBonuses[i].ToString() + " кликов";
+
+        for (int i = 0; i < mTypesOfAutoClickes.Length; i++)
+            mTextForPricesOfAutoClickes[i].text = mPricesOfAutoClickes[i].ToString() + " кликов";
+    }
 
     public void Close_Open_ShopPanels(int index)
     {
 
-        for (int i = 0; i < shopPanels.Length; i++)
+        for (int i = 0; i < mShopPanels.Length; i++)
         {
-            if (shopPanels[i].activeSelf)
+            if (mShopPanels[i].activeSelf)
             {
-                shopPanels[i].SetActive(false);
+                mShopPanels[i].SetActive(false);
 
                 if (i == index)
                 {
@@ -34,41 +57,38 @@ public class InterfaceScripts : MonoBehaviour
 
         if (index != 4)
         {
-            shopPanels[index].SetActive(true);
+            mShopPanels[index].SetActive(true);
         }
 
     }
 
-    public void AddBonus(int index)
+    public void BuyClickBonus(int index)
     {
-        if (Score.Score >= ClickBonusCost[index])
+        if (index < 0 && index > mTypesOfAutoClickes.Length)
+            return;
+
+        if (mScoreCounter.mScore >= mPricesOfClickBonuses[index])
         {
-            Score.bonus += ClickBonus[index];
-            Score.Score -= ClickBonusCost[index];
-            ClickBonusCost[index] *= 2;
-            TextClickBonusCost[index].text = ClickBonusCost[index] + "кликов";
-            Score.UpdateText();
+            mScoreCounter.mBonusClick += mTypesOfClickBonuses[index];
+            mScoreCounter.mScore -= mPricesOfClickBonuses[index];
+            mPricesOfClickBonuses[index] *= 2;
+            mTextForPricesOfClickBonunses[index].text = mPricesOfClickBonuses[index].ToString() + " кликов";
+            mScoreCounter.UpdateText();
         }
     }
 
-    public void BuyAutoclickBonus()
+    public void BuyAutoClick(int index)
     {
-        if (Score.Score >= 40)
+        if (index < 0 && index > mTypesOfAutoClickes.Length)
+            return;
+
+        if (mScoreCounter.mScore >= mPricesOfAutoClickes[index])
         {
-            autoBonus++;
-            Score.Score -= 40;
+            mScoreCounter.mAutoClick += mTypesOfAutoClickes[index];
+            mScoreCounter.mScore -= mPricesOfAutoClickes[index];
+            mPricesOfAutoClickes[index] *= 2;
+            mTextForPricesOfAutoClickes[index].text = mPricesOfAutoClickes[index].ToString() + " кликов";
+            mScoreCounter.UpdateText();
         }
     }
-
-    void FixedUpdate()
-    {
-        if (Time.realtimeSinceStartup - time1 > 1.0f)
-        {
-            Score.Score += autoBonus;
-            time1 = Time.realtimeSinceStartup;
-            Score.UpdateText();
-        }
-
-    }
-
 }

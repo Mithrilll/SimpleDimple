@@ -12,13 +12,11 @@ public class FPSCounter : MonoBehaviour
     const string display = "{0} FPS";
     public Text m_Text;
 
-
     private void Start()
     {
         m_FpsNextPeriod = Time.realtimeSinceStartup + fpsMeasurePeriod;
         m_Text = GetComponent<Text>();
     }
-
 
     private void Update()
     {

@@ -5,33 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
-
     public bool Audio;
+    public SaveSystem Save;
 
-    public void ClickSound(){
+    public void LoadScene(string name)
+    {
+        SceneManager.LoadScene(name);
+    }
 
-        GetComponent<AudioSource>().Play();
+    public void Options()
+    {
 
     }
 
-    public void NewGame(int index){
-
-        SceneManager.LoadScene(index);
-    
-    }
-
-    public void Options(){
-
-
-
-    }
-
-    public void ExitGame(){
-
+    public void ExitGame()
+    {
         Application.Quit();
-
     }
-
-    
-
 }

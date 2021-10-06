@@ -3,33 +3,56 @@ using UnityEngine.UI;
 
 public class ScoreCounter : MonoBehaviour
 {
-    public int Score;
-    public Text ScoreText;
-    public int bonus;
+    public int mScore;
+    public Text mScoreText;
+    public int mBonusClick;
+    public int mAutoClick;
+    public SaveSystem mSaveSystem;
 
-    void Start()
+    private float mLastTime;
+
+    private void Awake()
     {
-        Score = 0;
-        bonus = 1;
+        mScore = mSaveSystem.LoadData().score;
+        mBonusClick = mSaveSystem.LoadData().clickbonus;
+        mAutoClick = mSaveSystem.LoadData().autoclick;
+        mScoreText.text = mScore.ToString();
+        mLastTime = Time.realtimeSinceStartup;
+
+        UpdateText();
     }
 
-    void Update()
+    private void Start()
     {
+        mScore = mSaveSystem.LoadData().score;
+        mBonusClick = mSaveSystem.LoadData().clickbonus;
+        mAutoClick = mSaveSystem.LoadData().autoclick;
+        mScoreText.text = mScore.ToString();
+        mLastTime = Time.realtimeSinceStartup;
+
+        UpdateText();
+    }
+
+    private void FixedUpdate()
+    {
+        if (Time.realtimeSinceStartup - mLastTime > 1.0f)
+        {
+            mScore += mAutoClick;
+            mLastTime = Time.realtimeSinceStartup;
+        }
+
         UpdateText();
     }
 
     public void UpdateText()
     {
-        ScoreText.text = Score.ToString();
-    }
-
-    public void AddBonus()
-    {
-        bonus++;
+        mScoreText.text = mScore.ToString();
     }
 
     public void Count()
     {
-        Score += bonus;
+        mScore += mBonusClick;
     }
+
+
 }
